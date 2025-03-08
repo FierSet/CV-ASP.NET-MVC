@@ -1,0 +1,182 @@
+@model DataModel
+
+@{
+    ViewData["Title"] = "CV-";
+}
+
+<div class="main-box">
+    
+    <div class="left-box">
+
+        <div class="space"></div>
+        <div class="element-center">
+
+            <img src="@Model.Contacts[0].Img" alt="@Model.Contacts[0].Name" id="imageprofile">
+            <div class="caption"><h2>@Model.Contacts[0].Name</h2></div>
+            <hr/>
+
+        </div>
+
+        <div class = "couple contact-box">
+            <h2>Contact</h2>
+            <hr>
+            <h5>Phone</h5>
+            <p>@Model.Contacts[0].Phone</p>
+            <h5>Email</h5>
+            <p><a href="mailto:@Model.Contacts[0].Email">@Model.Contacts[0].Email</a></p>
+            <h5>Address</h5>
+            <p>@Model.Contacts[0].Address</p>
+        </div>
+
+        <div class = "couple contact-box">
+            <h2>Social Links</h2>
+            <hr>
+            @foreach(var links in Model.Links_social)
+            {
+                <h5>@links.Name</h5>
+                <p><a href="@Model.Contacts[0].Email">@links.Link</a></p>
+            }
+        </div>
+
+        <div class = "couple contact-box">
+            <h2>Education</h2>
+            <hr>
+            @foreach(var education in Model.Educations)
+            {
+                <h5>@education.School</h5>
+                <p>@education.Degree</p>
+            }
+        </div>
+
+        <div class = "couple contact-box">
+            <h2>Language</h2>
+            <hr>
+            @foreach(var language in Model.Languages)
+            {
+                <h5>@language.Name - @language.Level </h5>
+            }
+        </div>
+
+        <div class = "couple contact-box">
+            <h2>Skills</h2>
+            <hr>
+            <ul>
+                @foreach(var skill in Model.Skills)
+                {
+                    <li>@skill.Name</li>
+                }
+            </ul>
+        </div>
+
+        <div class="space"></div>
+    </div>
+
+    <div class="rigth-box">
+        <div class="space"></div>
+        <div class = "element-center">
+           <h2>@Model.Educations[0].Degree</h2>
+           <hr/>
+        </div>
+
+        <div class="couple">
+        @{
+            Dictionary<string, Dictionary<int, List<string>>> company = new Dictionary<string, Dictionary<int, List<string>>>{};
+
+            foreach(var comp in Model.XPS)
+            {
+                if(company.ContainsKey(comp.Company))
+                {
+                    int oldyear = company[comp.Company].Keys.FirstOrDefault();
+                    int newyear = oldyear + int.Parse(comp.Years);
+                    List<string> datacomp = company[comp.Company][oldyear];
+
+                    company[comp.Company].Remove(oldyear);
+                    company[comp.Company].Add(newyear, datacomp);
+                    company[comp.Company][newyear].Add(comp.Work);
+                }
+                else
+                {
+                    company[comp.Company] = new Dictionary<int, List<string>>();
+                    company[comp.Company].Add(int.Parse(comp.Years), new List<string>{comp.Work});  
+                }
+            }
+
+            foreach(var comp in company)
+            {
+                <h4>@comp.Value.First().Key Years - @comp.Key</h4>     
+
+                foreach(var work in comp.Value.First().Value)
+                {
+                    <p>@Html.Raw(work)</p>
+                }         
+            }
+        }
+        </div>
+
+        <div class="couple">
+            @{
+                Dictionary<string, List<string>> Knowledge = new Dictionary<string, List<string>>();
+                foreach(var know in Model.Knowledges)
+                {
+                    if(Knowledge.ContainsKey(know.Zone))
+                        Knowledge[know.Zone].Add(know.Tech);
+                    else
+                        Knowledge.Add(know.Zone, new List<string>{know.Tech});
+                }
+                <h4>Technologies</h4>
+                <table>
+                    <tr>
+                        @foreach(var area in Knowledge)
+                        {
+                            <th><h5>@area.Key</h5></th>
+                        }
+                    </tr>
+                    <tr>
+                        @foreach(var area in Knowledge)
+                        {
+                            <td>
+                                <ul>
+                                    @foreach(var tech in area.Value)
+                                    {
+                                        <li><p>@tech</p></li>
+                                    }
+                                </ul>
+                            </td>
+                        }
+                    </tr>
+                </table>
+            }
+        </div>
+
+        
+        <div class="couple">
+            <h4>Certificates</h4>
+            @{
+                Dictionary<string, List<string>> certificates = new Dictionary<string, List<string>>();
+                
+                foreach(var certificate in Model.Certificates)
+                {
+                    if(certificates.ContainsKey(certificate.Company))
+                        certificates[certificate.Company].Add(certificate.Name);
+                    else
+                        certificates.Add(certificate.Company, new List<string>{certificate.Name});
+                }
+
+                foreach(var cer in certificates)
+                {
+                    <h6>@cer.Key</h6>
+                    <ul>
+                        @foreach(var cername in cer.Value)
+                        {
+                            <li><p>@cername</p></li>
+                        }
+                    </ul>
+                }
+            }
+        </div>
+
+    </div>
+
+    
+
+</div>
