@@ -20,11 +20,11 @@
         <div class = "couple contact-box">
             <h2>Contact</h2>
             <hr>
-            <h5>Phone</h5>
+            <h5><i class="fa-solid fa-phone"></i> Phone</h5>
             <p>@Model.Contacts[0].Phone</p>
-            <h5>Email</h5>
+            <h5><i class="fa-solid fa-envelope"></i> Email</h5>
             <p><a href="mailto:@Model.Contacts[0].Email">@Model.Contacts[0].Email</a></p>
-            <h5>Address</h5>
+            <h5><i class="fa-solid fa-location-dot"></i> Address</h5>
             <p>@Model.Contacts[0].Address</p>
         </div>
 
@@ -33,7 +33,7 @@
             <hr>
             @foreach(var links in Model.Links_social)
             {
-                <h5>@links.Name</h5>
+                <h5><i class="fa-brands fa-@links.Name.ToLower()"></i> @links.Name</h5>
                 <p><a href="@links.Link">@links.Link</a></p> 
             }
         </div>
